@@ -63,8 +63,8 @@
 
 # Contact Information
 
-- ### Email-id : mdabdulla1507@gmail.com
+-  Email-id : mdabdulla1507@gmail.com
 
-- ### Github : https://github.com/malikk1510
+-  Github : https://github.com/malikk1510
 
-- ### LinkedIn : https://www.linkedin.com/in/mohd-abdulla-04b248194/
+-  LinkedIn : https://www.linkedin.com/in/mohd-abdulla-04b248194/
