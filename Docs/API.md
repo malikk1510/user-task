@@ -22,12 +22,9 @@
 - `{domain_name}/deleteTask/:id`
 <br/>&nbsp; To delete tasks
 - `{domain_name}/taskByUserId/:id`
-<br/>&nbsp; To create tasks
-
-
-![](https://img.shields.io/badge/status-pending-blueviolet)
+<br/>&nbsp; To create tasksyo
 - `{domain_name}/markTask/:id`
-<br/>&nbsp; To mark tasks as completed
+<br/>&nbsp; To mark tasks as completed/incompleted
 
 ## Note
 - Only authenticated user's can perform CRUD operations on their own tasks.

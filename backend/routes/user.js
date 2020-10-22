@@ -1,4 +1,5 @@
 const express = require('express');
+const app = express();
 const router = express.Router();
 const { check } = require('express-validator');
 
@@ -19,6 +20,12 @@ router.post('/signin', [
     check('email', 'Invalid email').isEmail(),
     check('password', 'Password length should be atleast 5 characters').isLength({ min: 5 })
 ],validationFunction ,signin);
+
+
+
+//Authenticated routes
+
+// app.use(auth);//auth-middleware
 
 //delete
 router.delete('/deleteUser',auth,deleteUser);
