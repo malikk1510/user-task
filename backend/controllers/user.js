@@ -1,5 +1,5 @@
 const User = require("../models/user");
-const {  validationResult } = require("express-validator");
+const { validationResult } = require("express-validator");
 
 //Validation error function
 const validationFunction = (req, res, next) => {
@@ -12,12 +12,15 @@ const validationFunction = (req, res, next) => {
 
 //signup
 const signup = async (req, res) => {
+
   const { name, email, password } = req.body;
+  console.log('body: ', req.body);
   try {
     const isUser = await User.find({ email });
 
     if (isUser.length >= 1) {
-      return res.status(400).json({ error: "User already exists!" });
+      console.log('l');
+      return res.status(400).send({ error: "User already exists!" });
     }
 
     const user = new User(req.body);
@@ -43,8 +46,15 @@ const signin = async (req, res) => {
     user.password = undefined;
     res.json({ user, token });
   } catch (err) {
-    return res.status(500).json({ error: "Invalid credentials!" });
+    return res.status(500).send({ error: "Invalid credentials!" });
   }
+};
+
+//Sign out logic
+const signout = (req, res) => {
+  res.json({
+    message: "You are successfully logged out!",
+  });
 };
 
 //delete
@@ -89,4 +99,5 @@ module.exports = {
   signin,
   deleteUser,
   updateUser,
+  signout
 };

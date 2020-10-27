@@ -6,7 +6,11 @@ const jwt = require("jsonwebtoken");
 const auth = async (req, res, next) => {
   //middleware function
   try {
-    const token = req.header("Authorization").replace("Bearer ", ""); //getting token from hgeaders & deleting bearer from token
+    // const token = req.header("Authorization").replace("Bearer ", "");
+    const token1 = req.header("Authorization").replace("Bearer ", ""); //getting token from hgeaders & deleting bearer from token
+    const token = token1.slice(1,-1)
+    
+    
     const decoded = jwt.verify(token, process.env.SECRET); // verfying if user have this token
     const user = await User.findOne({ _id: decoded._id }); // fnding user by id, the id we gave while generating tokens
     if (!user) {
@@ -16,7 +20,11 @@ const auth = async (req, res, next) => {
     req.user = user; // storing user in req object so tht we can acces it later
     next();
   } catch (err) {
-    res.status(401).json({ error: "Please authenticate!" });
+    res.json({
+      error: "Please authenticate!" ,
+      code:401
+    })
+    // res.status(401).json({ error: "Please authenticate!" });
   }
 };
 module.exports = auth;

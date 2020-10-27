@@ -4,7 +4,7 @@ const router = express.Router();
 const { check } = require('express-validator');
 
 //controllers
-const {signup,validationFunction,signin,deleteUser,updateUser} = require('../controllers/user');
+const {signup,validationFunction,signin,deleteUser,updateUser,signout} = require('../controllers/user');
 const auth = require('../middlewares/auth')
 
 //routes
@@ -12,7 +12,7 @@ const auth = require('../middlewares/auth')
 router.post('/signup', [
     check('email', 'Invalid email').isEmail(),
     check('name', 'name should be atleast 3 character').isLength({ min: 3 }),
-    check('password', 'Password length should be atleast 5 characters').isLength({ min: 5 })
+    check('password', 'Password length should be atleast 4 characters').isLength({ min: 4 })
 ],validationFunction ,signup);
 
 //signin
@@ -22,6 +22,8 @@ router.post('/signin', [
 ],validationFunction ,signin);
 
 
+//Signout route
+router.get('/signout',  signout);
 
 //Authenticated routes
 

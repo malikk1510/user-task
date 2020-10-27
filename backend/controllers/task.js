@@ -3,10 +3,13 @@ const Task = require("../models/task");
 
 //create task
 const createTask = async (req, res) => {
+  console.log(req.body);
+  console.log('user',req.user._id);
   const { title, body, dueDate } = req.body;
   if ((title && body && dueDate) === undefined) {
     return res.status(400).json({ error: "Input fields mustn't be empty!" });
   }
+
   const task = new Task({
     title,
     body,
@@ -15,10 +18,13 @@ const createTask = async (req, res) => {
   });
 
   try {
+  
     const newtask = await task.save();
+    console.log('ok');
     res.status(201).json(newtask);
   }
   catch (error) {
+    console.log('err');
     res.status(500).json({ error: "Unable to create task!" });
   }
 };

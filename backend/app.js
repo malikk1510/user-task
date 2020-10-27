@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const taskRoutes = require("./routes/task");
 const userRoutes = require("./routes/user");
-// const cors = require("cors");
+const cors = require("cors");
 const app = express();
 
 //specifying port
@@ -32,6 +32,12 @@ mongoose
   });
 
 //middlewares
+app.use( cors({
+  origin: "http://localhost:3000",
+  credentials: true,
+ allowedHeaders:false,
+ 
+}));
 app.use(bodyParser.json());
 
 //routes
