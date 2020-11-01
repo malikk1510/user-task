@@ -74,9 +74,16 @@ Some of the following modules & functionality that I have used in this project a
  - MIT
 
 # Some app screenshots
+#### *Home page*
 <img src="/app-images/homeScreen.PNG" width="300">
+
+#### *Signin page*
 <img src="/app-images/signin.PNG" width="300">
+
+#### *Signup page*
 <img src="/app-images/signup.PNG" width="300">
+
+#### *Home page after authentication*
 <img src="/app-images/authHome.PNG" width="300">
 
 # Contact Information
