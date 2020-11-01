@@ -1,18 +1,33 @@
 # **PROJECT - USER TASK APPLICATION**
 
 ## **INTRODUCTION**
- It is a basic react web application in which user can create an account and own tasks.
+ It is a basic react web application in which user can create an account and own tasks like a "Task Manager".
 
 ## **About**
+This is an application in which user can create own tasks and perform CRUD operations. User can also mark/unmark tasks. I have used ReactJs, NodeJs and MongoDB to make this application presentable.
 
-- Reactjs is used for providing UI, Nodejs is used as a backend server and mongob is used for storing data.
-- Users can update their profile even profile photo.
-- Users can update & delete their profile and tasks too.
-- Users can mark their completed task.
-- Users data is secure i.e other users will not be able to see each other's data. This functionality is provided by using
-  JWT (JSON WEB TOKEN).
-- For encryption bcrypt module is used.
-- Express js is used for faster performance.
+Some of the following modules & functionality that I have used in this project are:
+#### *Backend* 
+- express : To make this app easier to build and faster.
+- cors : For resource sharing and security purpose.
+- jsonwebtoken : For Authentication, Authorization, Security, and Information exchange. 
+- express-validator : For validations 
+- dotenv : For hiding private data
+- body-parser : To access the body input on the req object.
+- bcryptjs : For password encryption 
+- Error handler to catch errors.
+
+#### *Frontend*
+ - axios : For sending HTTP requests and managing response. 
+ - materialize-css : To make application responsive and presentable.
+ - react-toastify : For notifications
+ - react-router-dom : For navigating b/w components ,changing the browser URL,  modifying the browser history, and keeping the UI state in sync.
+ - react-modal : As a message box to display on the top of the screen.
+ - react-datepicker : To pick date 
+ - React context : To share data b/w components.
+ - For state management I have used React-reducer and React-sate.
+
+
 
 ## **WEBSITE ARCHITECTURE**
 
@@ -51,10 +66,6 @@
 ### **API**
 
    REST api's will be used as they are very fast and stateless protocol based
-
-### **Image storage**
-
-   Image storage is done on a very popular platform *Cloudinary* which is done again using api calls .
 
 # Timeline/Milestone
 

@@ -61,7 +61,7 @@ const signin = async (req, res,next) => {
     console.log(user);
     if(!user){
       return next(
-        new HttpError("Invalid credentials", 400)
+        new HttpError("Invalid user", 400)
       );
     }
     const token = await user.generateAuthToken();
@@ -69,7 +69,7 @@ const signin = async (req, res,next) => {
     res.json({ user, token });
   } catch (err) {
     const error = new HttpError(
-      'Invalid credentials!',
+      'Invalid user!',
       500
     );
     return next(error);

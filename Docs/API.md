@@ -8,10 +8,7 @@
 <br/>&nbsp; To signup new user
 - `{domain_name}/signin`
 <br/>&nbsp; To login existing user
-- `{domain_name}/updateUser`
-<br/>&nbsp; To update user's profile
-- `{domain_name}/deleteUser`
-<br/>&nbsp; To delete the user account
+
 ---
 #### Tasks
 ![](https://img.shields.io/badge/status-completed-brightgreen)
@@ -22,7 +19,7 @@
 - `{domain_name}/deleteTask/:id`
 <br/>&nbsp; To delete tasks
 - `{domain_name}/taskByUserId/:id`
-<br/>&nbsp; To create tasksyo
+<br/>&nbsp; To read all tasks by user id
 - `{domain_name}/markTask/:id`
 <br/>&nbsp; To mark tasks as completed/incompleted
 

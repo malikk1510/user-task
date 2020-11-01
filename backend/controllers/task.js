@@ -43,7 +43,7 @@ const updateTask = async (req, res,next) => {
 
   if ((title && body && dueDate) === "") {
     return next(
-      new HttpError('Invalid inputs!', 400)
+      new HttpError("Input fields mustn't be empty!", 400)
     );
   }
 
@@ -60,7 +60,7 @@ const updateTask = async (req, res,next) => {
     });
     if (!task) {
       return next(
-        new HttpError('Task not found in DB!', 404)
+        new HttpError('Task not found !', 404)
       );
     }
     res.json(task);
@@ -135,7 +135,7 @@ const markTask = async (req, res,next) => {
     const isTask = await Task.findById(_id);
     if(!isTask){
       return next(
-        new HttpError('Task not found in DB!', 404)
+        new HttpError('Task not found !', 404)
       );
      
     };
