@@ -31,7 +31,7 @@ function SignIn(props) {
 
         //axios request
         try {
-            const response = await axios.post("http://localhost:4000/signin", user);
+            const response = await axios.post("http://localhost:4000/api/home/signin", user);
 
             setLoader(true);
             toast.success('Signed in successfull !')

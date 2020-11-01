@@ -29,10 +29,10 @@ function SignUp() {
     const signup = async () => {
         //axios request
         try {
-            const response = await axios.post("http://localhost:4000/signup", user);
+            const response = await axios.post("http://localhost:4000/api/home/signup", user);
             setLoader(true);
             toast.success('Signup successfull!');
-            history.push('/signin');
+            history.push('/api/home/signin');
         }
         catch (error) {
             setLoader(true)

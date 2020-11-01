@@ -12,19 +12,19 @@ const auth = require('../middlewares/auth')
 // app.use(auth);//auth-middleware
 
 //create task
-router.post('/createTask',auth, createTask);
+router.post('/api/auth/createTask',auth, createTask);
 
 //update task
-router.patch('/updateTask/:id',auth, updateTask);
+router.patch('/api/auth/updateTask/:id',auth, updateTask);
 
 //delete task
-router.delete('/deleteTask/:id',auth, deleteTask);
+router.delete('/api/auth/deleteTask/:id',auth, deleteTask);
 
 //mark task as completed/incompleted
-router.patch('/markTask/:id',auth,markTask)
+router.patch('/api/auth/markTask/:id',auth,markTask)
 
 //reading tasks
-router.get('/taskByuserId',auth, taskByUserID);
+router.get('/api/auth/taskByuserId',auth, taskByUserID);
 
 //exporting
 module.exports = router

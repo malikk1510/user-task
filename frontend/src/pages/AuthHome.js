@@ -47,9 +47,8 @@ function Auth() {
     const [tasksparameters, setTasksParameters] = useState({
         Id: '',
         completed: null,
-        mark: ''
-
-    })
+        mark: ''   
+    });
     const [incompleted, setIncompleted] = useState([]);
     const [completed, setcompleted] = useState([]);
     const [loader, setLoader] = useState(false);
@@ -70,10 +69,10 @@ function Auth() {
     //addTask
     const addTask = async () => {
         console.log(state);
-       
+
         setLoader(false);
         try {
-            const response = await axios.post('http://localhost:4000/createTask', state, {
+            const response = await axios.post('http://localhost:4000/api/auth/createTask', state, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
                 },
@@ -81,7 +80,20 @@ function Auth() {
             setLoader(true);
             fetchTasks();
             toast.info('Task added successfully!')
-            history.push('/auth')
+            history.push('/api/auth');
+            setStartDate('');
+            dispatch({
+                type: 'title',
+                payload: ''
+            });
+            dispatch({
+                type: 'body',
+                payload: ''
+            });
+            dispatch({
+                type: 'date',
+                payload: ''
+            });
         }
         catch (error) {
             toast.error(`${error.response.data.message}`);
@@ -92,13 +104,18 @@ function Auth() {
     };
 
     //calling fetchTask 
-    useEffect(() => { fetchTasks(); }, []);
+    useEffect(() => {
+        fetchTasks();
+
+    }, []);
 
     //fetching tasks
     const fetchTasks = async () => {
+        console.log('fetching');
+
         setLoader(false);
         try {
-            const result = await axios.get("http://localhost:4000/taskByuserId", {
+            const result = await axios.get("http://localhost:4000/api/auth/taskByuserId", {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`
                 }
@@ -134,21 +151,23 @@ function Auth() {
 
     //changing input state
     const inputevent = (e) => {
-
+      
+        console.log(e.target.name);
         if (e.target.name === 'title') {
-        
+
             dispatch({
                 type: 'title',
                 payload: e.target.value
             })
-        } 
-        else  {
-           
+        }
+        else {
+
             dispatch({
                 type: 'body',
                 payload: e.target.value
             })
-        }
+        }  
+       
     };
 
     //marking and unmarking of a task
@@ -161,7 +180,7 @@ function Auth() {
             };
             setLoader(false);
             try {
-                const result = await axios.patch(`http://localhost:4000/markTask/${id}`, body, {
+                const result = await axios.patch(`http://localhost:4000/api/auth/markTask/${id}`, body, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -184,7 +203,7 @@ function Auth() {
             };
             setLoader(false);
             try {
-                const result = await axios.patch(`http://localhost:4000/markTask/${id}`, body, {
+                const result = await axios.patch(`http://localhost:4000/api/auth/markTask/${id}`, body, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -203,7 +222,7 @@ function Auth() {
 
     }
     //update task nd setting task id's
-    const setid = (taskId, isCompleted, mark) => {
+    const setid = (taskId, isCompleted, mark, title, body) => {
 
         setModalFor(true);
         if (isCompleted) {
@@ -248,7 +267,7 @@ function Auth() {
         }
         setLoader(false);
         try {
-            const result = await axios.patch(`http://localhost:4000/updateTask/${tasksparameters.Id}`, { state, body }, {
+            const result = await axios.patch(`http://localhost:4000/api/auth/updateTask/${tasksparameters.Id}`, { state, body }, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`
                 }
@@ -256,8 +275,20 @@ function Auth() {
             setLoader(true);
             setModal(false);
             toast.info('Task updated!')
-
             fetchTasks();
+            setStartDate('');
+            dispatch({
+                type: 'title',
+                payload: ''
+            });
+            dispatch({
+                type: 'body',
+                payload: ''
+            });
+            dispatch({
+                type: 'date',
+                payload: ''
+            });
         }
         catch (error) {
             setModal(false);
@@ -271,7 +302,7 @@ function Auth() {
         console.log(id);
         setLoader(false);
         try {
-            const result = await axios.delete(`http://localhost:4000/deleteTask/${id}`, {
+            const result = await axios.delete(`http://localhost:4000/api/auth/deleteTask/${id}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`
                 }
@@ -328,29 +359,32 @@ function Auth() {
             {loader ? <>
                 <div className='row' style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
                     <div className='col s12 center m4' style={{ display: 'flex', justifyContent: 'center', margin: '0' }}>
-                        <button className='col s10 m6 btn-large waves-effect waves-light indigo ' onClick={() => { setModal(true); setModalFor(false) }} style={{ margin: '0' }}>Add Task </button>
+                        <button className='col s10 m6 btn-large waves-effect waves-light indigo ' onClick={() => {
+                            setModal(true); setModalFor(false);
+
+                        }} style={{ margin: '0' }}>Add Task </button>
                     </div>
                 </div>
                 {modal ? <>
                     <div style={{ border: '1px solid whitesmoke', padding: '20px 50px', backgroundColor: 'lavender' }}>
                         <div style={{ marginTop: "20px" }}>
-                           Title
-                          <input id="first_name" type="text" onChange={inputevent} className="validate" name="title" />
+                            Title
+                          <input id="first_name"  type="text"  onChange={inputevent} className="validate" name="title" />
                            Body
-                           <input id="last_name" type="text" onChange={inputevent} className="validate" name="body" />
+                           <input id="last_name"  type="text" onChange={inputevent} className="validate" name="body" />
                            Due-date
-                        
-                          <div><DatePicker selected={startDate} name='date' onChange={(date)=>{
-                             setStartDate(date);
-                              dispatch({
-                                  type:'date',
-                                  payload:date
-                              })
-                          }} /></div>
+
+                          <div><DatePicker selected={startDate} onChange={(date) => {
+                                setStartDate(date);
+                                dispatch({
+                                    type: 'date',
+                                    payload: date
+                                })
+                            }} /></div>
                         </div>
                         <div >
                             {/*  modal for add/update task */}
-                            {modalfor ? <button onClick={() => { updateTask() }} style={{zIndex:'0'}}  className=" btn waves-effect indigo waves-light">Update <i className="material-icons right">send</i></button> : <button className=" btn waves-effect indigo waves-light" style={{zIndex:'0'}} onClick={() => { addTask(); setModal(false); }}>Add <i className="material-icons right">send</i></button>}
+                            {modalfor ? <button onClick={() => { updateTask() }} style={{ zIndex: '0' }} className=" btn waves-effect indigo waves-light">Update <i className="material-icons right">send</i></button> : <button className=" btn waves-effect indigo waves-light" style={{ zIndex: '0' }} onClick={() => { addTask(); setModal(false); }}>Add <i className="material-icons right">send</i></button>}
                         </div></div>
                 </> : null}
                 <div className='row incomplete '>
@@ -375,7 +409,8 @@ function Auth() {
                                                 <div style={{ margin: '8px 0 0 0 ' }}>
 
                                                     <i className="material-icons" style={{ cursor: 'pointer' }} onClick={() => { markUnmark(item._id, index, item.completed, item.mark) }}>{item.mark}</i>
-                                                    <span ><i className="material-icons" onClick={() => { setModal(true); setid(item._id, item.completed, item.mark) }} style={{ fontSize: '20px', cursor: "pointer" }} >edit</i> </span>
+                                                    <span ><i className="material-icons" onClick={() => {
+                                                        setModal(true); setid(item._id, item.completed, item.mark, item.title, item.body);}} style={{ fontSize: '20px', cursor: "pointer" }} >edit</i> </span>
                                                     <span><i className="material-icons" onClick={() => { setid(item._id, item.completed, item.mark); openModal(); }} style={{ fontSize: '20px', cursor: "pointer" }}>delete</i></span>
                                                 </div>
                                             </li>

@@ -20,9 +20,9 @@ function AppShell() {
       dispatch({
         type: "REFRESH"
       })
-      history.push('/auth');
+      history.push('/api/auth');
     } else {
-      history.push('/')
+      history.push('/api/home')
     }
   }, [dispatch,history])
  
@@ -30,11 +30,11 @@ function AppShell() {
     <>
       <Navbar />
       <Switch>
-        {state.isAuthenticated ? history.push('/auth'):history.push('/')}
-        <Route exact path='/'><Home /></Route>
-        <Route exact path='/auth'><Auth /></Route>
-        <Route path='/signup'><SignUp /></Route>
-        <Route path='/signin'><SignIn /></Route>
+        {state.isAuthenticated ? history.push('/api/auth'):history.push('/api/home')}
+        <Route exact path='/api/home'><Home /></Route>
+        <Route exact path='/api/auth'> <Auth /> </Route>
+        <Route path='/api/home/signup'><SignUp /></Route>
+        <Route path='/api/home/signin'><SignIn /></Route>
         <Redirect to="/" />
       </Switch>
     </>
