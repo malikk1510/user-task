@@ -37,7 +37,7 @@ function Navbar() {
             <ToastContainer position='top-center'  color="white" autoClose={1700} hideProgressBar pauseOnHover={false} transition={Slide} newestOnTop pauseOnFocusLoss={false} />
                 <nav className='nav-wrapper indigo'>
                     <div className='container'>
-                        {state.isAuthenticated ? <span className='brand-logo' style={{ textTransform: 'uppercase' }}>{state.user.name}</span> : <span className='brand-logo'>User Task</span>}
+                        {state.isAuthenticated ? <span  style={{ fontWeight:'bold' }}>Hii {state.user.name}, welcome to the app.</span> : <span className='brand-logo'>User Task</span>}
                         <a href className='sidenav-trigger' data-target='mobile-menu'>
                             <i className='material-icons' style={{cursor:'pointer'}}>menu</i>
                         </a>

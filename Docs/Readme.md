@@ -25,7 +25,7 @@ Some of the following modules & functionality that I have used in this project a
  - react-modal : As a message box to display on the top of the screen.
  - react-datepicker : To pick date 
  - React context : To share data b/w components.
- - For state management I have used React-reducer and React-sate.
+ - For state management I have used React-reducer and React-state.
 
 
 
@@ -71,6 +71,12 @@ Some of the following modules & functionality that I have used in this project a
 
 # License
  - MIT
+
+# Some app screenshots
+<img src="/app-images/homeScreen.PNG" width="300">
+<img src="/app-images/signin.PNG" width="300">
+<img src="/app-images/signup.PNG" width="300">
+<img src="/app-images/authHome.PNG" width="300">
 
 # Contact Information
 
