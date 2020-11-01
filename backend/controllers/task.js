@@ -1,13 +1,17 @@
 //requiring Task model
 const Task = require("../models/task");
+const HttpError = require('../models/HttpError');
 
 //create task
-const createTask = async (req, res) => {
+const createTask = async (req, res,next) => {
   console.log(req.body);
-  console.log('user',req.user._id);
+ 
   const { title, body, dueDate } = req.body;
-  if ((title && body && dueDate) === undefined) {
-    return res.status(400).json({ error: "Input fields mustn't be empty!" });
+  if ((title && body && dueDate) === "" ) {
+    return next(
+      new HttpError("Input fields mustn't be empty!", 400)
+    );
+    
   }
 
   const task = new Task({
@@ -20,90 +24,131 @@ const createTask = async (req, res) => {
   try {
   
     const newtask = await task.save();
-    console.log('ok');
     res.status(201).json(newtask);
   }
-  catch (error) {
-    console.log('err');
-    res.status(500).json({ error: "Unable to create task!" });
+  catch (err) {
+    const error = new HttpError(
+      'Unable to create task!',
+      500
+    );
+    return next(error);
   }
 };
 
 //update
-const updateTask = async (req, res) => {
+const updateTask = async (req, res,next) => {
   const _id = req.params.id;
+  // console.log(req.body);
+  const { title, body, dueDate } = req.body.state;
 
-  const { title, body, dueDate } = req.body;
-  console.log("body", req.body);
-  if ((title && body && dueDate) === undefined) {
-    return res.status(400).json({ error: "Invalid inputs!" });
+  if ((title && body && dueDate) === "") {
+    return next(
+      new HttpError('Invalid inputs!', 400)
+    );
   }
 
   try {
-    const task = await Task.findByIdAndUpdate({ _id, owner: req.user._id }, req.body, {
+   
+    const task = await Task.findByIdAndUpdate({ _id:_id, owner: req.user._id }, {
+      title:req.body.state.title,
+      body:req.body.state.body,
+      dueDate:req.body.state.dueDate,
+      completed:req.body.body.completed,
+      mark:req.body.body.mark}, {
       new: true,
       runValidators: true,
     });
     if (!task) {
-      return res.status(400).json({
-        error: "Task not found in DB!",
-      });
+      return next(
+        new HttpError('Task not found in DB!', 404)
+      );
     }
     res.json(task);
   } catch (err) {
-    return res.status(500).json({ err });
+    const error = new HttpError(
+      'Unable to update task!',
+      500
+    );
+    return next(error);
+    
   }
 };
 
 //delete
-const deleteTask = async (req, res) => {
+const deleteTask = async (req, res,next) => {
   const _id = req.params.id;
+ 
   try {
-    const task = await Task.findOneAndDelete({ _id: _id, owner: req.user._id });
+    const task = await Task.findOne({_id:_id,owner:req.user._id});
     if (!task) {
-      return res.status(404).json({
-        error: "Task not found!",
-      });
+      return next(
+        new HttpError('Task not found!', 404)
+      );
     }
-    res.json({
-      message: "Deleted",
-    });
+    task.remove((err,product)=>{
+      if(err){
+       
+        return next(
+          new HttpError('Unable to remove task', 500)
+        );
+      }
+      res.json({
+        message: "Deleted",
+      });
+    })
+   
   } catch (err) {
-    res.status(500).json(err);
+    const error = new HttpError(
+      'Unable to delete task!',
+      500
+    );
+    return next(error);
+   
   }
 };
 
 //reading tasks by userId
-const taskByUserID = async (req, res) => {
-  const _id = req.params.id;
+const taskByUserID = async (req, res,next) => {
+  const _id = req.user._id;
+ 
   try {
     const tasks = await Task.find({ owner: _id });
-    if (tasks.length === 0) {
-      return res.status(400).json({ error: "No tasks found!" });
-    }
     res.json(tasks);
-  } catch (error) {
-    return res.status(500).json({ error: "Unable to find tasks!" });
+  } catch (err) {
+    const error = new HttpError(
+      'Unable to get task!',
+      500
+    );
+    return next(error);
+  
   }
 };
 
 //mark task as completed/incompleted
-const markTask = async (req, res) => {
-  const { completed } = req.body
+const markTask = async (req, res,next) => {
+ 
+  const { completed,mark } = req.body
+  
   const _id = req.params.id
-  if(completed==undefined && completed ==null){
-    return res.status(400).json({error:"Invalid inputs!"})
-  }
+  
   try {
     const isTask = await Task.findById(_id);
     if(!isTask){
-      return res.status(400).json({error:'Task not found in DB!'})
+      return next(
+        new HttpError('Task not found in DB!', 404)
+      );
+     
     };
-   const task= await Task.findByIdAndUpdate({ _id, owner: req.user._id },{$set:{completed}},{runValidators:true,new:true});
+   const task= await Task.findByIdAndUpdate({ _id, owner: req.user._id },{$set:{completed,mark}},{runValidators:true,new:true});
     res.json(task);
   } 
   catch (err) {
-    return res.status(500).json({error:'Unable to process the request!'})
+    const error = new HttpError(
+      'Unable to mark task!',
+      500
+    );
+    return next(error);
+   
   }
 };
 

@@ -43,3 +43,18 @@ app.use(bodyParser.json());
 //routes
 app.use(taskRoutes);
 app.use(userRoutes);
+
+
+//error handler
+app.use((error, req, res, next) => {
+  
+  if (res.headerSent) {
+    console.log('error1');
+    return next(error);
+  }
+
+  res.status(error.code);
+  res.json({ message: error.message });
+  
+  
+});

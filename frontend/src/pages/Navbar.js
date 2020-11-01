@@ -1,24 +1,32 @@
-import React, { useContext } from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import React, { useContext,useState } from 'react';
+import { NavLink} from 'react-router-dom';
 import Axios from 'axios';
 import { AuthContext } from '../contexts/authContext'
+import {ToastContainer, toast, Slide} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+
 
 //Navbar component
 function Navbar() {
     const { state, dispatch } = useContext(AuthContext)
+    const [loader, setLoader] = useState(false);
     
     // logout 
     const logout = async () => {
 
         try {
             const response = await Axios.get("http://localhost:4000/signout");
-            console.log(response.data);
+            setLoader(true);
+            toast.success('Logout successfull!')
             dispatch({
                 type: "LOGOUT"
             })
         } 
         catch (err) {
-            console.log(err);
+            setLoader(true);
+            toast.error(`${err.response.data.message}`)
+            
         }
 
     };
@@ -26,31 +34,32 @@ function Navbar() {
     return (
         <>
             <header>
+            <ToastContainer position='top-center'  color="white" autoClose={1700} hideProgressBar pauseOnHover={false} transition={Slide} newestOnTop pauseOnFocusLoss={false} />
                 <nav className='nav-wrapper indigo'>
                     <div className='container'>
-                        {state.isAuthenticated ? <span className='brand-logo' style={{ textTransform: 'uppercase' }}>{state.user.name}</span> : <Link className='brand-logo'>User Task</Link>}
-                        <Link className='sidenav-trigger' data-target='mobile-menu'>
-                            <i className='material-icons'>menu</i>
-                        </Link>
+                        {state.isAuthenticated ? <span className='brand-logo' style={{ textTransform: 'uppercase' }}>{state.user.name}</span> : <span className='brand-logo'>User Task</span>}
+                        <a href className='sidenav-trigger' data-target='mobile-menu'>
+                            <i className='material-icons' style={{cursor:'pointer'}}>menu</i>
+                        </a>
                         <ul className='right hide-on-med-and-down'>
                             {state.isAuthenticated ? <>
-                                {/* <li><span className="btn  " style={{marginRight:'5px'}}>{state.user.name}</span></li> */}
                                 <li> <button className="btn waves-effect hoverable indigo waves-light" onClick={logout} name="action"> Logout</button></li>
 
                             </> : <>
-                                    <li> <NavLink exact to='/signin'> SignIn</NavLink></li>
-                                    <li>  <NavLink exact to='/signup'> SignUp</NavLink></li>
+                                    <li> <NavLink exact to='/signin' > SignIn</NavLink></li>
+                                    <li>  <NavLink exact to='/signup' > SignUp</NavLink></li>
                                 </>}
                         </ul>
 
                     </div>
                 </nav>
+                
                 <ul className='sidenav ' id='mobile-menu'>
-                    {state.isAuthenticated ? <>
-                        <li> <button class="btn waves-effect waves-light" onClick={logout} name="action"> Logout</button></li>
+                    {state.isAuthenticated ? <> 
+                        <li> <button className="btn waves-effect waves-light sidenav-close" onClick={logout} name="action"> Logout</button></li>
                     </> : <>
-                            <li> <NavLink to='/signin'> SignIn</NavLink></li>
-                            <li>  <NavLink to='/signup'> SignUp</NavLink></li>
+                            <li> <NavLink to='/signin' className="sidenav-close" > SignIn</NavLink></li>
+                            <li>  <NavLink to='/signup' className="sidenav-close"> SignUp</NavLink></li>
                         </>}
                 </ul>
             </header>

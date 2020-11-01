@@ -6,12 +6,6 @@ const router = express.Router();
 const { createTask, updateTask, deleteTask, taskByUserID, markTask } = require('../controllers/task')
 const auth = require('../middlewares/auth')
 
-//Un-Authenticated routes
-
-//reading tasks
-router.get('/taskByuserId/:id', taskByUserID);
-
-
 
 //Authenticated routes
 
@@ -28,6 +22,9 @@ router.delete('/deleteTask/:id',auth, deleteTask);
 
 //mark task as completed/incompleted
 router.patch('/markTask/:id',auth,markTask)
+
+//reading tasks
+router.get('/taskByuserId',auth, taskByUserID);
 
 //exporting
 module.exports = router

@@ -6,6 +6,9 @@ import SignUp from './pages/signup';
 import Auth from './pages/AuthHome';
 import Navbar from './pages/Navbar';
 import { AuthContext } from "./contexts/authContext"
+import  "materialize-css/dist/css/materialize.min.css"
+import M  from "materialize-css/dist/js/materialize.min.js"
+import "react-toastify/dist/ReactToastify.css";
 
 //Appsell
 function AppShell() {
@@ -21,7 +24,7 @@ function AppShell() {
     } else {
       history.push('/')
     }
-  }, [])
+  }, [dispatch,history])
  
   return (
     <>
@@ -76,16 +79,16 @@ const reducer = (state, action) => {
 };
 
 function App() {
-  // const changeLogin =(newcontext)=>{
-  //   console.log('newcontext: ', newcontext);
-  //   setAuth({...auth,newcontext})
-  // }
+  useEffect(()=>{
+   document.addEventListener('DOMContentLoaded', function() {
+        var elems = document.querySelectorAll('.sidenav');
+        var instances = M.Sidenav.init(elems, {});
 
-  // const [auth,setAuth] = useState({
-  //   loggedIn:false,
-  //   token:undefined,
-  //   changeLogin
-  // })
+      });
+    
+    
+},[])
+ 
   const [state, dispatch] = React.useReducer(reducer, initialState);
   return (
     <>
@@ -93,7 +96,9 @@ function App() {
         state,
         dispatch
       }}>
+      
         <AppShell />
+        
       </AuthContext.Provider>
 
     </>

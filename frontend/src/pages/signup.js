@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
-// import { NavLink } from "react-router-dom"
+import { toast } from "react-toastify";
 import axios from 'axios'
+import { useHistory } from 'react-router-dom';
+import Loader from '../component/Loader'
 
 //signup component
 function SignUp() {
+    const history = useHistory();
     const [user, setUser] = useState({
         name: '',
         email: '',
         password: ''
     })
+    const [loader, setLoader] = useState(false);
 
     //inputs onchange event
     const inputEvent = (event) => {
@@ -24,17 +28,23 @@ function SignUp() {
     //sending signup request
     const signup = async () => {
         //axios request
-      try {
-        const response =await axios.post("http://localhost:4000/signup",user);
-        console.log(response.data);
-      } catch (error) {
-          console.log(error);
-      }
+        try {
+            const response = await axios.post("http://localhost:4000/signup", user);
+            setLoader(true);
+            toast.success('Signup successfull!');
+            history.push('/signin');
+        }
+        catch (error) {
+            setLoader(true)
+            toast.error(`${error.response.data.message}`)
+
+        }
     };
 
     return (
         <>
             <div className="row signup" >
+
                 <div className=' col s12 m6 ' style={{ margin: "5px 0" }}>
                     <h4 className='center grey darken-3' style={{ padding: '10px 20px', color: 'white' }}>USER TASK </h4>
                 </div>
@@ -57,6 +67,7 @@ function SignUp() {
                     </button>
                 </div>
             </div>
+
         </>
     )
 }

@@ -18,6 +18,10 @@ const taskSchema = new mongoose.Schema({
         type:Boolean,
         default:false
     },
+    mark:{
+        type:String,
+        default:'check_box_outline_blank'
+    },
     owner:{
         type: mongoose.Schema.Types.ObjectId,
         required: true,
