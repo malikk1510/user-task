@@ -69,7 +69,7 @@ Some of the following modules & functionality that I have used in this project a
    
 
 # Images
-<img src="https://cdn.pixabay.com/photo/2014/10/26/14/36/light-bulb-503881_1280.jpg" >   
+<img src="https://cdn.pixabay.com/photo/2014/10/26/14/36/light-bulb-503881_1280.jpg" width="100">   
 
 # Timeline/Milestone
 
