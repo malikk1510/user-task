@@ -86,10 +86,6 @@ Some of the following modules & functionality that I have used in this project a
 #### *Home page after authentication*
 <img src="../app-images/authHome.PNG" width="300">
 
-
-# Application Demo
-<img src="../app-images/app_demo.gif">
-=======
 # Timeline/Milestone
 
 # License
