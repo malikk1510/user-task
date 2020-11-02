@@ -68,7 +68,7 @@ Some of the following modules & functionality that I have used in this project a
    REST api's will be used as they are very fast and stateless protocol based
 
 # Application Demo
-<img src="/app-images/app_demo.gif">
+<img src="../app-images/app_demo.gif">
 
 # Some app screenshots
 #### *Home page*
@@ -86,7 +86,7 @@ Some of the following modules & functionality that I have used in this project a
 #### *Home page after authentication*
 <img src="../app-images/authHome.PNG" width="300">
 
-<<<<<<< HEAD:client/Docs/Readme.md
+
 # Application Demo
 <img src="../app-images/app_demo.gif">
 =======
@@ -94,7 +94,6 @@ Some of the following modules & functionality that I have used in this project a
 
 # License
  - MIT
->>>>>>> f33e23b75a7bb6f4ca05b5c1034c182228bf0f47:Docs/Readme.md
 
 # Contact Information
 
