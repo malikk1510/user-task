@@ -13,7 +13,7 @@ const port = process.env.PORT || 4000;
 
 //setting connection b/w node and database!
 mongoose
-  .connect(process.env.MONGODBURI || "mongodb+srv://malikk1510:minions@123@taskmanager.lgiv4.mongodb.net/<dbname>?retryWrites=true&w=majority", {
+  .connect(process.env.MONGODBURI , {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
