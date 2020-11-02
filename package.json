@@ -4,7 +4,7 @@
   "description": "An user-task application in which any user can create his own task and modify it.",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "nodemon app.js",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
     
   },

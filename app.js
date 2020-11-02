@@ -10,10 +10,10 @@ const app = express();
 
 //specifying port
 const port = process.env.PORT || 4000;
-
+console.log(process.env);
 //setting connection b/w node and database!
 mongoose
-  .connect("mongodb+srv://malikk1510:malikk@123@taskmanager.lgiv4.mongodb.net/<dbname>?retryWrites=true&w=majority" , {
+  .connect(process.env.MONGODBURI , {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
