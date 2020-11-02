@@ -1,11 +1,11 @@
 //requiring modules
-require("dotenv").config();
+// require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const taskRoutes = require("./routes/task");
 const userRoutes = require("./routes/user");
-const cors = require("cors");
+// const cors = require("cors");
 const app = express();
 
 //specifying port
@@ -13,7 +13,7 @@ const port = process.env.PORT || 4000;
 
 //setting connection b/w node and database!
 mongoose
-  .connect(process.env.DATABASE, {
+  .connect(process.env.MONGODBURI || "mongodb+srv://malikk1510:minions@123@taskmanager.lgiv4.mongodb.net/<dbname>?retryWrites=true&w=majority", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
@@ -32,13 +32,19 @@ mongoose
   });
 
 //middlewares
-app.use( cors({
-  origin: "http://localhost:3000",
-  credentials: true,
- allowedHeaders:false,
+// app.use( cors({
+//   origin: "http://localhost:3000",
+//   credentials: true,
+//  allowedHeaders:false,
  
-}));
+// }));
 app.use(bodyParser.json());
+
+//heroku
+if(process.env.NODE_ENV === 'production'){
+  app.use(express.static('client/build'));
+};
+
 
 //routes
 app.use(taskRoutes);

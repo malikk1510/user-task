@@ -2,11 +2,14 @@
   "name": "user-task",
   "version": "1.0.0",
   "description": "An user-task application in which any user can create his own task and modify it.",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js",
-    [...]
+    "build":"cd client && npm run build",
+    "install-client":"cd client && npm install",
+    "heroku-postbuld":"npm run install-client && npm run build",
+    "start": "node app.js"
+   
   },
   "author": "Mohd Abdulla",
   "license": "ISC",
