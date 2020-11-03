@@ -1,5 +1,5 @@
 //requiring modules
-// require("dotenv").config();
+require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -40,20 +40,21 @@ mongoose
 // }));
 app.use(bodyParser.json());
 
-//heroku
-if(process.env.NODE_ENV === 'production'){
-  app.use(express.static('client/build'));
-  const path = require('path');
-  app.get('*',(req,res)=>{
-    res.sendFile(path.resolve(__dirname,'client','build','index.html'))
-  })
-};
+
 
 
 //routes
 app.use(taskRoutes);
 app.use(userRoutes);
 
+//heroku
+// if(process.env.NODE_ENV === 'production'){
+//   app.use(express.static('client/build'));
+//   const path = require('path');
+//   app.get('*',(req,res)=>{
+//     res.sendFile(path.resolve(__dirname,'client','build','index.html'))
+//   })
+// };
 
 //error handler
 app.use((error, req, res, next) => {
