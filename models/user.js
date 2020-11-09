@@ -1,4 +1,4 @@
-require("dotenv").config({path:'../.env'});
+// require("dotenv").config({path:'../.env'});
 const mongoose = require("mongoose");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -34,7 +34,7 @@ const userSchema = new Schema(
 //Assigning token to each user!
 userSchema.methods.generateAuthToken = async function () {
   const user = this;
-  const token = await jwt.sign({ _id: user._id.toString() }, process.env.SECRET);//jwt.verify method is used to verify token we have stored in database!|| key is in json format thts y we used to.String().
+  const token = await jwt.sign({ _id: user._id.toString() },'newuser');//jwt.verify method is used to verify token we have stored in database!|| key is in json format thts y we used to.String().
   return token;
 }
 

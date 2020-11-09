@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { toast } from "react-toastify";
-import axios from 'axios'
 import { useHistory } from 'react-router-dom';
-import Loader from '../component/Loader'
+import { signUpAPI} from '../data/services/todo.service';
 
 //signup component
 function SignUp() {
@@ -29,16 +28,17 @@ function SignUp() {
     const signup = async () => {
         //axios request
         try {
-            const response = await axios.post("http://localhost:4000/api/home/signup", user);
-            setLoader(true);
-            toast.success('Signup successfull!');
-            history.push('/api/home/signin');
+            const response = await signUpAPI(user);
+            if (response.isSuccessful) {
+                setLoader(true);
+                toast.success('Signup successfull!');
+                history.push('/api/home/signin');
+            } else {
+                setLoader(true)
+                toast.error(response.message)
+            }
         }
-        catch (error) {
-            setLoader(true)
-            toast.error(`${error.response.data.message}`)
-
-        }
+        catch (error) {}
     };
 
     return (

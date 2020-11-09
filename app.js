@@ -1,19 +1,21 @@
 //requiring modules
-require("dotenv").config();
+// require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const taskRoutes = require("./routes/task");
 const userRoutes = require("./routes/user");
-// const cors = require("cors");
+const cors = require("cors");
 const app = express();
 
+
+
 //specifying port
-const port = process.env.PORT || 4000;
-console.log(process.env);
+const port =  5000;
+
 //setting connection b/w node and database!
 mongoose
-  .connect(process.env.MONGODBURI , {
+  .connect("mongodb+srv://malikk1510:minions@123@taskmanager.lgiv4.mongodb.net/TaskManager?retryWrites=true&w=majority" , {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
@@ -31,30 +33,19 @@ mongoose
     console.log(err);
   });
 
-//middlewares
-// app.use( cors({
-//   origin: "http://localhost:3000",
-//   credentials: true,
-//  allowedHeaders:false,
+// middlewares
+app.use( cors({
+  origin: "http://localhost:3001",
+  credentials: true,
+ allowedHeaders:false,
  
-// }));
+}));
+
 app.use(bodyParser.json());
-
-
-
 
 //routes
 app.use(taskRoutes);
 app.use(userRoutes);
-
-//heroku
-// if(process.env.NODE_ENV === 'production'){
-//   app.use(express.static('client/build'));
-//   const path = require('path');
-//   app.get('*',(req,res)=>{
-//     res.sendFile(path.resolve(__dirname,'client','build','index.html'))
-//   })
-// };
 
 //error handler
 app.use((error, req, res, next) => {

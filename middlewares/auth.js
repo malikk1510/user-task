@@ -1,4 +1,4 @@
-require("dotenv").config({ path: "../env" });
+// require("dotenv").config({ path: "../env" });
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 
@@ -11,7 +11,7 @@ const auth = async (req, res, next) => {
     const token = token1.slice(1,-1)
     
     
-    const decoded = jwt.verify(token, process.env.SECRET); // verfying if user have this token
+    const decoded = jwt.verify(token, 'newuser'); // verfying if user have this token
     const user = await User.findOne({ _id: decoded._id }); // fnding user by id, the id we gave while generating tokens
     if (!user) {
       throw new Error("Unauthorized!");

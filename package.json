@@ -4,9 +4,7 @@
   "description": "An user-task application in which any user can create his own task and modify it.",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js"
-   
-    
+    "start": "nodemon app.js" 
   },
   "author": "Mohd Abdulla",
   "license": "ISC",

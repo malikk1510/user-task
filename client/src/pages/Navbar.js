@@ -1,48 +1,50 @@
-import React, { useContext,useState } from 'react';
+import React, {useState } from 'react';
 import { NavLink} from 'react-router-dom';
-import Axios from 'axios';
-import { AuthContext } from '../contexts/authContext'
+import {useDispatch,useSelector} from "react-redux"
 import {ToastContainer, toast, Slide} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-
+import {logoutt} from "../data/reducers/todo.reducer"
+import {signOutAPI } from '../data/services/todo.service';
+import Loader from "../component/Loader"
 
 //Navbar component
 function Navbar() {
-    const { state, dispatch } = useContext(AuthContext)
+
+    const todoList = useSelector(state => state.todoReducer);
+    const dispatch = useDispatch();
     const [loader, setLoader] = useState(false);
     
     // logout 
     const logout = async () => {
 
         try {
-            const response = await Axios.get("http://localhost:4000/api/auth/signout");
-            setLoader(true);
+          const response = await signOutAPI();
+          setLoader(true);
+           if (response.isSuccessful) {
+            setLoader(false);
             toast.success('Logout successfull!')
-            dispatch({
-                type: "LOGOUT"
-            })
+            dispatch(logoutt());
+           } else {
+            setLoader(false);
+            toast.error(response.message)
+           }
         } 
-        catch (err) {
-            setLoader(true);
-            toast.error(`${err.response.data.message}`)
-            
-        }
-
+        catch (err) {}
     };
 
     return (
         <>
             <header>
+            {loader?<Loader/>:""}
             <ToastContainer position='top-center'  color="white" autoClose={1700} hideProgressBar pauseOnHover={false} transition={Slide} newestOnTop pauseOnFocusLoss={false} />
                 <nav className='nav-wrapper indigo'>
                     <div className='container'>
-                        {state.isAuthenticated ? <span  style={{ fontWeight:'bold' }}>Hii {state.user.name}, welcome to the app.</span> : <NavLink to='/api/home'><span className='brand-logo'>User Task</span></NavLink>}
+                        {todoList.isAuthenticated ? <span  style={{ fontWeight:'bold' }}>Hii {todoList.user.name}, welcome to the app.</span> : <NavLink to='/api/home'><span className='brand-logo'>User Task</span></NavLink>}
                         <a href className='sidenav-trigger' data-target='mobile-menu'>
                             <i className='material-icons' style={{cursor:'pointer'}}>menu</i>
                         </a>
                         <ul className='right hide-on-med-and-down'>
-                            {state.isAuthenticated ? <>
+                            {todoList.isAuthenticated ? <>
                                 <li> <button className="btn waves-effect hoverable indigo waves-light" onClick={logout} name="action"> Logout</button></li>
 
                             </> : <>
@@ -55,7 +57,7 @@ function Navbar() {
                 </nav>
                 
                 <ul className='sidenav ' id='mobile-menu'>
-                    {state.isAuthenticated ? <> 
+                    {todoList.isAuthenticated ? <> 
                         <li> <button className="btn waves-effect waves-light sidenav-close" style={{margin:'21px'}} onClick={logout} name="action"> Logout</button></li>
                     </> : <>
                            

@@ -1,53 +1,26 @@
-import React, { useEffect, useReducer, useState } from 'react';
-import axios from 'axios'
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux"
+import { changeTitle, changeBody, changeDueDate } from "../data/reducers/todo.reducer"
+import { createTodoItemAPI, getTodoItemAPI, updateTodoItemAPI, deleteTodoItemAPI, markTodoItemAPI } from '../data/services/todo.service';
 import Loader from '../component/Loader'
 import Modal from 'react-modal';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import 'react-datepicker/dist/react-datepicker-cssmodules.css';
 
-//..
-const initialState = {
-    title: '',
-    body: '',
-    dueDate: ''
-}
-//reducer func for update and adding task
-const reducer = (state, action) => {
-    switch (action.type) {
-        case "title":
-            return {
-                ...state,
-                title: action.payload,
-            };
-        case 'body':
-            return {
-                ...state,
-                body: action.payload,
-            };
-        case 'date':
-            return {
-                ...state,
-                dueDate: action.payload
-            };
-        default:
-            return state;
-    }
-};
-
-
 //Authentication page
 function Auth() {
     const history = useHistory();
-    const [state, dispatch] = useReducer(reducer, initialState);
+    const dispatch = useDispatch();
+    const taskData = useSelector(state => state.todoReducer).taskForm;
     const [modal, setModal] = useState(false);
     const [modalfor, setModalFor] = useState();
     const [tasksparameters, setTasksParameters] = useState({
         Id: '',
         completed: null,
-        mark: ''   
+        mark: ''
     });
     const [incompleted, setIncompleted] = useState([]);
     const [completed, setcompleted] = useState([]);
@@ -55,8 +28,9 @@ function Auth() {
     const [modalIsOpen, setIsOpen] = React.useState(false);
     const [startDate, setStartDate] = useState();
 
-    Modal.setAppElement('#root')
+
     //modal
+    Modal.setAppElement('#root');
     function openModal() {
         setIsOpen(true);
     }
@@ -68,68 +42,52 @@ function Auth() {
 
     //addTask
     const addTask = async () => {
-        console.log(state);
 
         setLoader(false);
         try {
-            const response = await axios.post('http://localhost:4000/api/auth/createTask', state, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-            });
-            setLoader(true);
-            fetchTasks();
-            toast.info('Task added successfully!')
-            history.push('/api/auth');
-            setStartDate('');
-            dispatch({
-                type: 'title',
-                payload: ''
-            });
-            dispatch({
-                type: 'body',
-                payload: ''
-            });
-            dispatch({
-                type: 'date',
-                payload: ''
-            });
+            const response = await createTodoItemAPI(taskData);
+            if (response.isSuccessful) {
+                setLoader(true);
+                fetchTasks();
+                toast.info('Task added successfully!')
+                history.push('/api/auth');
+                setStartDate('');
+                dispatch(changeTitle(""));
+                dispatch(changeBody(""));
+                dispatch(changeDueDate(""));
+            }
+            else {
+                // console.log(response.message.message);
+                toast.error(response.message);
+                setLoader(true);
+            }
+
         }
         catch (error) {
-            toast.error(`${error.response.data.message}`);
-            setLoader(true);
-
+            console.log("error occured");
         }
-
     };
 
     //calling fetchTask 
-    useEffect(() => {
-        fetchTasks();
-
-    }, []);
+    useEffect(() => { fetchTasks() }, []);
 
     //fetching tasks
     const fetchTasks = async () => {
-        console.log('fetching');
-
         setLoader(false);
         try {
-            const result = await axios.get("http://localhost:4000/api/auth/taskByuserId", {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`
-                }
-            });
-            setLoader(true);
-            setIncompleted(result.data);//incompleted array
-            setcompleted(result.data)//completed array
-            filter();
+            const response = await getTodoItemAPI();
+            if (response.isSuccessful) {
+                setLoader(true);
+                setIncompleted(response.data);//incompleted array
+                setcompleted(response.data)//completed array
+                filter();
+            }
+            else {
+                toast.error(response.message);
+                setLoader(true);
+            }
         }
-        catch (error) {
-            toast.error(`${error.response.data.message}`);
-            setLoader(true);
-
-        }
+        catch (error) { }
 
     };
 
@@ -151,23 +109,13 @@ function Auth() {
 
     //changing input state
     const inputevent = (e) => {
-      
-        console.log(e.target.name);
         if (e.target.name === 'title') {
-
-            dispatch({
-                type: 'title',
-                payload: e.target.value
-            })
+            dispatch(changeTitle(e.target.value));
         }
         else {
+            dispatch(changeBody(e.target.value));
+        }
 
-            dispatch({
-                type: 'body',
-                payload: e.target.value
-            })
-        }  
-       
     };
 
     //marking and unmarking of a task
@@ -180,20 +128,18 @@ function Auth() {
             };
             setLoader(false);
             try {
-                const result = await axios.patch(`http://localhost:4000/api/auth/markTask/${id}`, body, {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem("token")}`
-                    }
-                });
-                setLoader(true);
-                toast.info('Task marked Incompleted!')
-                fetchTasks();
+                const response = await markTodoItemAPI(body, id);
+                if (response.isSuccessful) {
+                    setLoader(true);
+                    toast.info('Task marked Incompleted!')
+                    fetchTasks();
+                }
+                else {
+                    setLoader(true);
+                    toast.error(response.message);
+                }
             }
-            catch (error) {
-                setLoader(true);
-                toast.error(`${error.response.data.message}`);
-
-            }
+            catch (error) { }
         }
         else {
 
@@ -203,30 +149,30 @@ function Auth() {
             };
             setLoader(false);
             try {
-                const result = await axios.patch(`http://localhost:4000/api/auth/markTask/${id}`, body, {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem("token")}`
-                    }
-                });
-                setLoader(true);
-                toast.info('Task completed!')
+                const response = await markTodoItemAPI(body, id);
+                if (response.isSuccessful) {
+                    setLoader(true);
+                    toast.info('Task completed!')
+                    fetchTasks();
+                }
+                else {
+                    setLoader(true);
+                    toast.error(response.message)
+                }
 
-                fetchTasks();
             }
-            catch (error) {
-                setLoader(true);
-                toast.error(`${error.response.data.message}`)
-            }
-
+            catch (error) { }
         }
 
     }
-    //update task nd setting task id's
+
+    //update task nd setting task parameters
     const setid = (taskId, isCompleted, mark, title, body) => {
 
         setModalFor(true);
-        if (isCompleted) {
 
+        //setting task parameters
+        if (isCompleted) {
             setTasksParameters((pre) => {
                 return {
                     ...pre,
@@ -252,6 +198,7 @@ function Auth() {
 
     //updating
     const updateTask = async () => {
+        setLoader(false);
         let body;
         if (tasksparameters.completed) {
             body = {
@@ -265,55 +212,47 @@ function Auth() {
                 mark: "check_box_outline_blank"
             }
         }
-        setLoader(false);
+        
         try {
-            const result = await axios.patch(`http://localhost:4000/api/auth/updateTask/${tasksparameters.Id}`, { state, body }, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`
-                }
-            })
-            setLoader(true);
-            setModal(false);
-            toast.info('Task updated!')
-            fetchTasks();
-            setStartDate('');
-            dispatch({
-                type: 'title',
-                payload: ''
-            });
-            dispatch({
-                type: 'body',
-                payload: ''
-            });
-            dispatch({
-                type: 'date',
-                payload: ''
-            });
+            const response = await updateTodoItemAPI({ taskData, body }, tasksparameters.Id)
+            if (response.isSuccessful) {
+                setLoader(true);
+                setModal(false);
+                toast.info('Task updated!')
+                fetchTasks();
+                setStartDate('');
+                dispatch(changeTitle(""));
+                dispatch(changeBody(""));
+                dispatch(changeDueDate(""));
+            }
+            else {
+                
+                setModal(false);
+                setLoader(true);
+                toast.error(response.message);
+            }
+
         }
-        catch (error) {
-            setModal(false);
-            setLoader(true);
-            toast.error(`${error.response.data.message}`);
-        }
+        catch (error) { };
     }
 
     //delete task
     const deleteTask = async (id) => {
-        console.log(id);
+
         setLoader(false);
         try {
-            const result = await axios.delete(`http://localhost:4000/api/auth/deleteTask/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`
-                }
-            });
-            setLoader(true);
-            toast.info('Task deleted!')
-            fetchTasks();
-        } catch (error) {
-            setLoader(true);
-            toast.error(`${error.response.data.message}`);
+            const response = await deleteTodoItemAPI(id);
+            if (response.isSuccessful) {
+                setLoader(true);
+                toast.info('Task deleted!')
+                fetchTasks();
+            }
+            else {
+                setLoader(true);
+                toast.error(response.message);
+            }
         }
+        catch (error) { };
     }
 
     return (
@@ -369,17 +308,14 @@ function Auth() {
                     <div style={{ border: '1px solid whitesmoke', padding: '20px 50px', backgroundColor: 'lavender' }}>
                         <div style={{ marginTop: "20px" }}>
                             Title
-                          <input id="first_name"  type="text"  onChange={inputevent} className="validate" name="title" />
+                          <input id="first_name" type="text" onChange={inputevent} className="validate" name="title" />
                            Body
-                           <input id="last_name"  type="text" onChange={inputevent} className="validate" name="body" />
+                           <input id="last_name" type="text" onChange={inputevent} className="validate" name="body" />
                            Due-date
 
                           <div><DatePicker selected={startDate} onChange={(date) => {
                                 setStartDate(date);
-                                dispatch({
-                                    type: 'date',
-                                    payload: date
-                                })
+                                dispatch(changeDueDate(date));
                             }} /></div>
                         </div>
                         <div >
@@ -410,7 +346,8 @@ function Auth() {
 
                                                     <i className="material-icons" style={{ cursor: 'pointer' }} onClick={() => { markUnmark(item._id, index, item.completed, item.mark) }}>{item.mark}</i>
                                                     <span ><i className="material-icons" onClick={() => {
-                                                        setModal(true); setid(item._id, item.completed, item.mark, item.title, item.body);}} style={{ fontSize: '20px', cursor: "pointer" }} >edit</i> </span>
+                                                        setModal(true); setid(item._id, item.completed, item.mark, item.title, item.body);
+                                                    }} style={{ fontSize: '20px', cursor: "pointer" }} >edit</i> </span>
                                                     <span><i className="material-icons" onClick={() => { setid(item._id, item.completed, item.mark); openModal(); }} style={{ fontSize: '20px', cursor: "pointer" }}>delete</i></span>
                                                 </div>
                                             </li>

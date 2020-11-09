@@ -39,7 +39,7 @@ const createTask = async (req, res,next) => {
 const updateTask = async (req, res,next) => {
   const _id = req.params.id;
   // console.log(req.body);
-  const { title, body, dueDate } = req.body.state;
+  const { title, body, dueDate } = req.body.taskData;
 
   if ((title && body && dueDate) === "") {
     return next(
@@ -50,9 +50,9 @@ const updateTask = async (req, res,next) => {
   try {
    
     const task = await Task.findByIdAndUpdate({ _id:_id, owner: req.user._id }, {
-      title:req.body.state.title,
-      body:req.body.state.body,
-      dueDate:req.body.state.dueDate,
+      title,
+      body,
+      dueDate,
       completed:req.body.body.completed,
       mark:req.body.body.mark}, {
       new: true,

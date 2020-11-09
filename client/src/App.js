@@ -1,36 +1,38 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Route, Switch, Redirect, useHistory } from 'react-router-dom';
 import Home from "./pages/home"
 import SignIn from './pages/signin';
 import SignUp from './pages/signup';
 import Auth from './pages/AuthHome';
 import Navbar from './pages/Navbar';
-import { AuthContext } from "./contexts/authContext"
-import  "materialize-css/dist/css/materialize.min.css"
-import M  from "materialize-css/dist/js/materialize.min.js"
+import "materialize-css/dist/css/materialize.min.css";
+import M from "materialize-css/dist/js/materialize.min.js";
 import "react-toastify/dist/ReactToastify.css";
+import { useDispatch, useSelector } from "react-redux"
+import { constants } from "./config"
+import { refresh } from './data/reducers/todo.reducer';
 
 //Appsell
 function AppShell() {
-  const { state,dispatch } = useContext(AuthContext)
+
+  const dispatch = useDispatch();
+  const todoList = useSelector(state => state.todoReducer);
   const history = useHistory();
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user'));
+    const user = JSON.parse(localStorage.getItem(constants.KEY_USER));
     if (user) {
-      dispatch({
-        type: "REFRESH"
-      })
+      dispatch(refresh());
       history.push('/api/auth');
     } else {
       history.push('/api/home')
     }
-  }, [dispatch,history])
- 
+  }, [])
+
   return (
     <>
       <Navbar />
       <Switch>
-        {state.isAuthenticated ? history.push('/api/auth'):history.push('/api/home')}
+        {todoList.isAuthenticated ? history.push('/api/auth') : history.push('/api/home')}
         <Route exact path='/api/home'><Home /></Route>
         <Route exact path='/api/auth'> <Auth /> </Route>
         <Route path='/api/home/signup'><SignUp /></Route>
@@ -41,70 +43,21 @@ function AppShell() {
   )
 }
 
-const initialState = {
-  isAuthenticated: false,
-  user: null,
-  token: null,
-};
-
-const reducer = (state, action) => {
-  switch (action.type) {
-    case "LOGIN":
-      localStorage.setItem("user", JSON.stringify(action.payload.user));
-      localStorage.setItem("token", JSON.stringify(action.payload.token));
-      return {
-        ...state,
-        isAuthenticated: true,
-        user: action.payload.user,
-        token: action.payload.token
-      };
-    case "LOGOUT":
-      localStorage.clear();
-      return {
-        ...state,
-        isAuthenticated: false,
-        user: null,
-        token: null
-      };
-    case "REFRESH":
-      return {
-        ...state,
-        isAuthenticated: true,
-        user:  JSON.parse(localStorage.getItem('user')),
-        token: JSON.parse(localStorage.getItem('token')),
-      };
-    default:
-      return state;
-  }
-};
-
+//App component
 function App() {
-  useEffect(()=>{
-   document.addEventListener('DOMContentLoaded', function() {
-        var elems = document.querySelectorAll('.sidenav');
-        var instances = M.Sidenav.init(elems, {});
+  useEffect(() => {
+    document.addEventListener('DOMContentLoaded', function () {
+      var elems = document.querySelectorAll('.sidenav');
+      M.Sidenav.init(elems, {});
+    });
+  }, [])
 
-      });
-    
-    
-},[])
- 
-  const [state, dispatch] = React.useReducer(reducer, initialState);
   return (
     <>
-      <AuthContext.Provider value={{
-        state,
-        dispatch
-      }}>
-      
-        <AppShell />
-        
-      </AuthContext.Provider>
-
+      <AppShell />
     </>
   )
 };
-
 
 
 export default App;
