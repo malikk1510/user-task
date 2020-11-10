@@ -1,23 +1,4 @@
-import { api, getAuthHeaders, get, post, update, del } from "./services.common";
-
-//signin
-export const signInAPI = async (userData) => {
-  let url = `${api}/api/home/signin`;
-  return await post(url, userData)
-};
-
-//signup
-export const signUpAPI = async (userData) => {
-  let url = `${api}/api/home/signup`;
-  return await post(url, userData)
-};
-
-//signout
-export const signOutAPI = async () => {
-  let url = `${api}/api/auth/signout`;
-  let authHeader = getAuthHeaders();
-  return await get(url, authHeader)
-};
+import { api, getAuthHeaders, get, post, update, del } from "./CommonServices";
 
 //creating task
 export const createTodoItemAPI = async (todoItem) => {

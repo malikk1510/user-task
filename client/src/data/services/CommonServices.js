@@ -25,7 +25,7 @@ export const post = async (url, data, headers) => {
     }
     catch (e) {
         
-        console.log(e.response)
+        // console.log(e.response)
         return error(e.response.data.message)
     }
 }
@@ -37,7 +37,7 @@ export const update = async (url, data, headers) => {
         return success(response.data)
     }
     catch (e) {
-        console.log(e.response)
+        // console.log(e.response)
         return error(e.response.data.message)
     }
 }

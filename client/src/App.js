@@ -10,33 +10,36 @@ import M from "materialize-css/dist/js/materialize.min.js";
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux"
 import { constants } from "./config"
-import { refresh } from './data/reducers/todo.reducer';
+import { refresh } from './data/reducers/AuthReducer';
+import { checkToken } from "./data/reducers/AuthReducer"
 
 //Appsell
 function AppShell() {
-
   const dispatch = useDispatch();
-  const todoList = useSelector(state => state.todoReducer);
+  const auth = useSelector(state => state.authReducer).auth;
   const history = useHistory();
+
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem(constants.KEY_USER));
-    if (user) {
-      dispatch(refresh());
-      history.push('/api/auth');
-    } else {
-      history.push('/api/home')
-    }
+    dispatch(checkToken(localStorage.getItem(constants.KEY_AUTH_TOKEN),))
+      .then((res) => {
+        if (res.payload.loggedIn) {
+          dispatch(refresh());
+          history.push('/api/auth');
+        } else {
+          history.push('/api/home')
+        }
+      });
   }, [])
 
   return (
     <>
       <Navbar />
       <Switch>
-        {todoList.isAuthenticated ? history.push('/api/auth') : history.push('/api/home')}
+        {auth.isAuthenticated ? history.push('/api/auth') : history.push('/api/home')}
         <Route exact path='/api/home'><Home /></Route>
-        <Route exact path='/api/auth'> <Auth /> </Route>
-        <Route path='/api/home/signup'><SignUp /></Route>
-        <Route path='/api/home/signin'><SignIn /></Route>
+        <Route exact path='/api/auth'><Auth /></Route>
+        <Route exact path='/api/home/signup'><SignUp /></Route>
+        <Route exact path='/api/home/signin'><SignIn /></Route>
         <Redirect to="/" />
       </Switch>
     </>
@@ -46,6 +49,7 @@ function AppShell() {
 //App component
 function App() {
   useEffect(() => {
+
     document.addEventListener('DOMContentLoaded', function () {
       var elems = document.querySelectorAll('.sidenav');
       M.Sidenav.init(elems, {});

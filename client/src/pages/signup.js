@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
-import { toast } from "react-toastify";
-import { useHistory } from 'react-router-dom';
-import { signUpAPI} from '../data/services/todo.service';
+import { signUpAPI} from '../data/services/AuthServices';
+import { loginn } from "../data/reducers/AuthReducer";
+import { useDispatch } from "react-redux"
+import {errorToast,successToast} from "../data/toast/Toasts";
+import { constants } from "../config"
+import Loader from '../component/Loader';
 
 //signup component
 function SignUp() {
-    const history = useHistory();
+    const dispatch = useDispatch();
     const [user, setUser] = useState({
         name: '',
         email: '',
         password: ''
-    })
+    });
+
     const [loader, setLoader] = useState(false);
 
     //inputs onchange event
@@ -26,16 +30,22 @@ function SignUp() {
 
     //sending signup request
     const signup = async () => {
+        setLoader(true);
         //axios request
         try {
             const response = await signUpAPI(user);
-            if (response.isSuccessful) {
-                setLoader(true);
-                toast.success('Signup successfull!');
-                history.push('/api/home/signin');
+            if (response.isSuccessful) {   
+                //local storage
+				localStorage.setItem(constants.KEY_USER, JSON.stringify(response.data.user));
+                localStorage.setItem(constants.KEY_AUTH_TOKEN, JSON.stringify(response.data.token));
+
+                dispatch(loginn(response.data));
+                setLoader(false);           
+                successToast('Signup successfull!');
+               
             } else {
-                setLoader(true)
-                toast.error(response.message)
+                setLoader(false);
+                errorToast(response.message)
             }
         }
         catch (error) {}
@@ -44,7 +54,7 @@ function SignUp() {
     return (
         <>
             <div className="row signup" >
-
+            {loader ? <Loader /> : ""}
                 <div className=' col s12 m6 ' style={{ margin: "5px 0" }}>
                     <h4 className='center grey darken-3' style={{ padding: '10px 20px', color: 'white' }}>USER TASK </h4>
                 </div>
@@ -63,7 +73,7 @@ function SignUp() {
                 </div>
                 {/* input  end */}
                 <div className=" col s12 m6" style={{ margin: "5px 0" }}>
-                    <button className="btn indigo waves-effect waves-light" name="action" onClick={signup}>SignUp
+                    <button className="btn indigo waves-effect waves-light" name="action" onClick={()=>{signup()}}>SignUp
                     </button>
                 </div>
             </div>
