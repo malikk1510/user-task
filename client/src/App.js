@@ -19,16 +19,21 @@ function AppShell() {
   const auth = useSelector(state => state.authReducer).auth;
   const history = useHistory();
 
-  useEffect(() => {
-    dispatch(checkToken(localStorage.getItem(constants.KEY_AUTH_TOKEN),))
-      .then((res) => {
+  useEffect(async() => {
+    document.addEventListener('DOMContentLoaded', function () {
+      var elems = document.querySelectorAll('.sidenav');
+      M.Sidenav.init(elems, {});
+    });
+  const res  = await  dispatch(checkToken(localStorage.getItem(constants.KEY_AUTH_TOKEN),))
+      // .then((res) => {
+        console.log('res: ', res);
         if (res.payload.loggedIn) {
           dispatch(refresh());
           history.push('/api/auth');
         } else {
           history.push('/api/home')
         }
-      });
+      // });
   }, [])
 
   return (
@@ -48,13 +53,13 @@ function AppShell() {
 
 //App component
 function App() {
-  useEffect(() => {
+  // useEffect(() => {
 
-    document.addEventListener('DOMContentLoaded', function () {
-      var elems = document.querySelectorAll('.sidenav');
-      M.Sidenav.init(elems, {});
-    });
-  }, [])
+    // document.addEventListener('DOMContentLoaded', function () {
+    //   var elems = document.querySelectorAll('.sidenav');
+    //   M.Sidenav.init(elems, {});
+    // });
+  // }, [])
 
   return (
     <>
