@@ -8,14 +8,12 @@ const userRoutes = require("./routes/user");
 const cors = require("cors");
 const app = express();
 
-
-
 //specifying port
-const port =process.env.PORT ||  4000;
+const port = process.env.PORT || 4000;
 
 //setting connection b/w node and database!
 mongoose
-  .connect("mongodb+srv://malikk1510:minions@123@taskmanager.lgiv4.mongodb.net/TaskManager?retryWrites=true&w=majority" , {
+  .connect(process.env.MONGODBURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
@@ -34,7 +32,7 @@ mongoose
   });
 
 // middlewares
-app.use( cors());
+app.use(cors());
 
 app.use(bodyParser.json());
 
@@ -44,14 +42,11 @@ app.use(userRoutes);
 
 //error handler
 app.use((error, req, res, next) => {
-  
   if (res.headerSent) {
-    console.log('error1');
+    console.log("error1");
     return next(error);
   }
 
   res.status(error.code);
   res.json({ message: error.message });
-  
-  
 });
