@@ -22,7 +22,7 @@ mongoose
     useFindAndModify: false,
   })
   .then(() => {
-    console.log("Connected to Database!");
+    console.log("Connected to DatabaseEE!");
 
     //setting listening port
     app.listen(port, () => {
