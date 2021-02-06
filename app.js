@@ -11,7 +11,7 @@ const app = express();
 
 
 //specifying port
-const port =process.env.port ||  5000;
+const port =process.env.PORT ||  5000;
 
 //setting connection b/w node and database!
 mongoose
