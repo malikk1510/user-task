@@ -34,12 +34,7 @@ mongoose
   });
 
 // middlewares
-app.use( cors({
-  origin: "http://localhost:3000",
-  credentials: true,
- allowedHeaders:false,
- 
-}));
+app.use( cors());
 
 app.use(bodyParser.json());
 
