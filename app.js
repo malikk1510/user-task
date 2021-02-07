@@ -39,7 +39,9 @@ app.use(bodyParser.json());
 //routes
 app.use(taskRoutes);
 app.use(userRoutes);
-
+app.get("/", (req, res) => {
+  res.send("You are good to go!");
+});
 //error handler
 app.use((error, req, res, next) => {
   if (res.headerSent) {
