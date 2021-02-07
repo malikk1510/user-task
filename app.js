@@ -40,7 +40,7 @@ app.use(bodyParser.json());
 app.use(taskRoutes);
 app.use(userRoutes);
 
-app.get("/age", (req, res) => {
+app.get("/", (req, res) => {
   res.send("You are good to go!");
 });
 
