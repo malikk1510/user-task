@@ -46,11 +46,7 @@ app.get("/", (req, res) => {
 
 //error handler
 app.use((error, req, res, next) => {
-  if (res.headerSent) {
-    console.log("error1");
-    return next(error);
-  }
-
+  // console.log('error: ', error);
   res.status(error.code);
-  res.json({ message: error.message });
+  res.json({ message: error.message, code: error.code, data: null });
 });

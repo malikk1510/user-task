@@ -37,7 +37,7 @@ const createTask = async (req, res,next) => {
 
 //update
 const updateTask = async (req, res,next) => {
-  const _id = req.params.id;
+  const _id = req.query.id;
   // console.log(req.body);
   const { title, body, dueDate } = req.body.taskData;
 
@@ -109,7 +109,7 @@ const deleteTask = async (req, res,next) => {
 
 //reading tasks by userId
 const taskByUserID = async (req, res,next) => {
-  const _id = req.user._id;
+  const _id = req.query._id;
  
   try {
     const tasks = await Task.find({ owner: _id });
